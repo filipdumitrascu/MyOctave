@@ -38,7 +38,7 @@ values are sorted by a bubble sort.
 - for the letter "T" put in the dynamically allocated "transposed" matrix the elements and consider by pointing as the matrix transposed being the new matrix.
 
 - for the letter "R" a unit matrix "raised" and a temporary matrix "temp" with
-which is calculated the power of the matrix in a logharithmic complexity are
+which is calculated the power of the matrix in a logarithmic complexity are
 used. The matrix "temp" takes the value 0 after each multiplication so that it
 can be reused and the "raised" matrix is placed in the vector as the new matrix.
 
