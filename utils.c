@@ -41,9 +41,11 @@ void alloc_matrix(int ***matrix, int rows, int columns)
 		 * defensive programming point of view)
 		 */
 		if (!(*matrix)[i]) {
-			for (int j = 0; j < i; j++)
+			for (int j = 0; j < i; j++) {
 				free((*matrix)[j]);
+			}
 			free(*matrix);
+
 			DIE(1, "Calloc for a row failed");
 		}
 	}
@@ -51,16 +53,19 @@ void alloc_matrix(int ***matrix, int rows, int columns)
 
 void free_matrix(int ***matrix, int rows)
 {
-	for (int i = 0; i < rows; i++)
+	for (int i = 0; i < rows; i++) {
 		free((*matrix)[i]);
+	}
 	free(*matrix);
 }
 
 void reset_matrix(int ***matrix, int rows, int columns)
 {
-	for (int i = 0; i < rows; i++)
-		for (int j = 0; j < columns; j++)
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < columns; j++) {
 			(*matrix)[i][j] = 0;
+		}
+	}
 }
 
 void swap(int *a, int *b)

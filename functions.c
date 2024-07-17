@@ -35,9 +35,11 @@ void load(int ****array, int *layer, int **rows, int **columns)
 	/**
 	 * Matrix reading
 	 */
-	for (int i = 0; i < m; i++)
-		for (int j = 0; j < n; j++)
+	for (int i = 0; i < m; i++) {
+		for (int j = 0; j < n; j++) {
 			scanf("%d ", &(*array)[*layer][i][j]);
+		}
+	}
 
 	(*layer)++;
 }
@@ -59,6 +61,7 @@ void print(int ***array, int layer, int *rows, int *columns)
 {
 	int index;
 	scanf("%d", &index);
+
 	if (index >= layer || index < 0) {
 		printf("No matrix with the given index\n");
 		return;
@@ -68,30 +71,35 @@ void print(int ***array, int layer, int *rows, int *columns)
 	 * Print element by element
 	 */
 	for (int i = 0; i < rows[index]; i++) {
-		for (int j = 0; j < columns[index]; j++)
+		for (int j = 0; j < columns[index]; j++) {
 			printf("%d ", array[index][i][j]);
+		}
 		printf("\n");
 	}
 }
 
-void correct(int ****array, int layer, int **rows, int **columns)
+void crop(int ****array, int layer, int **rows, int **columns)
 {
-	int index, *new_rows = NULL, *new_columns = NULL, l, c;
+	int index, *new_rows = NULL, *new_columns = NULL, num_rows, num_columns;
 	scanf("%d", &index);
 
 	/**
 	 * Read from the stdin the positions of the elements
 	 * to be placed in the resized matrix
 	 */
-	scanf("%d", &l);
-	alloc_array(&new_rows, l);
-	for (int i = 0; i < l; i++)
-		scanf("%d", &new_rows[i]);
+	scanf("%d", &num_rows);
+	alloc_array(&new_rows, num_rows);
 
-	scanf("%d", &c);
-	alloc_array(&new_columns, c);
-	for (int i = 0; i < c; i++)
+	for (int i = 0; i < num_rows; i++) {
+		scanf("%d", &new_rows[i]);
+	}
+
+	scanf("%d", &num_columns);
+	alloc_array(&new_columns, num_columns);
+
+	for (int i = 0; i < num_columns; i++) {
 		scanf("%d", &new_columns[i]);
+	}
 
 	if (index >= layer || index < 0) {
 		free(new_rows);
@@ -104,10 +112,13 @@ void correct(int ****array, int layer, int **rows, int **columns)
 	 * Allocate the resized matrix and place the elements
 	 */
 	int **resized = NULL;
-	alloc_matrix(&resized, l, c);
-	for (int i = 0 ; i < l; i++)
-		for (int j = 0; j < c; j++)
+	alloc_matrix(&resized, num_rows, num_columns);
+
+	for (int i = 0 ; i < num_rows; i++) {
+		for (int j = 0; j < num_columns; j++) {
 			resized[i][j] = (*array)[index][new_rows[i]][new_columns[j]];
+		}
+	}
 
 	/**
 	 * Deallocates the memory the current matrix
@@ -122,21 +133,21 @@ void correct(int ****array, int layer, int **rows, int **columns)
 	free(new_rows);
 	free(new_columns);
 
-	(*rows)[index] = l;
-	(*columns)[index] = c;
+	(*rows)[index] = num_rows;
+	(*columns)[index] = num_columns;
 }
 
 void multiplicate(int ****array, int *layer, int **rows, int **columns)
 {
-	int m1, m2;
-	scanf("%d %d", &m1, &m2);
+	int index1, index2;
+	scanf("%d %d", &index1, &index2);
 
-	if (m1 >= *layer || m2 >= *layer || m1 < 0 || m2 < 0) {
+	if (index1 >= *layer || index2 >= *layer || index1 < 0 || index2 < 0) {
 		printf("No matrix with the given index\n");
 		return;
 	}
 
-	if ((*rows)[m2] != (*columns)[m1]) {
+	if ((*rows)[index2] != (*columns)[index1]) {
 		printf("Cannot perform matrix multiplication\n");
 		return;
 	}
@@ -145,18 +156,19 @@ void multiplicate(int ****array, int *layer, int **rows, int **columns)
 	realloc_array(rows, (*layer) + 1);
 	realloc_array(columns, (*layer) + 1);
 
-	(*rows)[*layer] = (*rows)[m1];
-	(*columns)[*layer] = (*columns)[m2];
+	(*rows)[*layer] = (*rows)[index1];
+	(*columns)[*layer] = (*columns)[index2];
 	alloc_matrix(&(*array)[*layer], (*rows)[*layer], (*columns)[*layer]);
 
-	for (int i = 0; i < (*rows)[m1]; i++) {
-		for (int j = 0; j < (*columns)[m2]; j++) {
-			for (int k = 0; k < (*rows)[m2]; k++) {
+	for (int i = 0; i < (*rows)[index1]; i++) {
+		for (int j = 0; j < (*columns)[index2]; j++) {
+			for (int k = 0; k < (*rows)[index2]; k++) {
 				(*array)[*layer][i][j] = ((*array)[*layer][i][j] +
-				(*array)[m1][i][k] * (*array)[m2][k][j]) % MODULO;
+				(*array)[index1][i][k] * (*array)[index2][k][j]) % MODULO;
 
-				if ((*array)[*layer][i][j] < 0)
+				if ((*array)[*layer][i][j] < 0) {
 					(*array)[*layer][i][j] += MODULO;
+				}
 			}
 		}
 	}
@@ -173,12 +185,15 @@ void ordonate(int ****array, int layer, int **rows, int **columns)
 	 * Calculates the sum for each matrix
 	 */
 	for (int num = 0; num < layer; num++) {
-		for (int i = 0; i < (*rows)[num]; i++)
-			for (int j = 0; j < (*columns)[num]; j++)
+		for (int i = 0; i < (*rows)[num]; i++) {
+			for (int j = 0; j < (*columns)[num]; j++) {
 				sum[num] = (sum[num] + (*array)[num][i][j]) % MODULO;
+			}
+		}
 
-		if (sum[num] < 0)
+		if (sum[num] < 0) {
 			sum[num] += MODULO;
+		}
 	}
 
 	/**
@@ -220,9 +235,11 @@ void transpose(int ****array, int layer, int **rows, int **columns)
 	/**
 	 * Placing transposed values in the matrix
 	 */
-	for (int i = 0; i < (*columns)[index]; i++)
-		for (int j = 0; j < (*rows)[index]; j++)
+	for (int i = 0; i < (*columns)[index]; i++) {
+		for (int j = 0; j < (*rows)[index]; j++) {
 			transposed[i][j] = (*array)[index][j][i];
+		}
+	}
 
 	/**
 	 * Releasing the current matrix from memory
@@ -268,35 +285,46 @@ void raise(int ****array, int layer, int **rows, int **columns)
 	 * Initialise the raised matrix as a unity matrix because
 	 * this way it has no effect for the first multiplication
 	 */
-	for (int i = 0; i < (*rows)[index]; i++)
+	for (int i = 0; i < (*rows)[index]; i++) {
 		raised[i][i] = 1;
+	}
 
 	while (power) {
 		if (power % 2) {
-			for (int i = 0; i < (*rows)[index]; i++)
-				for (int j = 0; j < (*rows)[index]; j++)
-					for (int k = 0; k < (*rows)[index]; k++)
+			for (int i = 0; i < (*rows)[index]; i++) {
+				for (int j = 0; j < (*rows)[index]; j++) {
+					for (int k = 0; k < (*rows)[index]; k++) {
 						temp[i][j] = (temp[i][j] + raised[i][k] *
 						(*array)[index][k][j]) % MODULO;
+					}
+				}
+			}
 			power--;
 
-			for (int i = 0; i < (*rows)[index]; i++)
-				for (int j = 0; j < (*rows)[index]; j++)
+			for (int i = 0; i < (*rows)[index]; i++) {
+				for (int j = 0; j < (*rows)[index]; j++) {
 					raised[i][j] = temp[i][j];
+				}
+			}
 
 			reset_matrix(&temp, (*rows)[index], (*rows)[index]);
 
 		} else {
-			for (int i = 0; i < (*rows)[index]; i++)
-				for (int j = 0; j < (*rows)[index]; j++)
-					for (int k = 0; k < (*rows)[index]; k++)
+			for (int i = 0; i < (*rows)[index]; i++) {
+				for (int j = 0; j < (*rows)[index]; j++) {
+					for (int k = 0; k < (*rows)[index]; k++) {
 						temp[i][j] = (temp[i][j] + (*array)[index][i][k] *
 						(*array)[index][k][j]) % MODULO;
+					}
+				}
+			}
 			power /= 2;
 
-			for (int i = 0; i < (*rows)[index]; i++)
-				for (int j = 0; j < (*rows)[index]; j++)
+			for (int i = 0; i < (*rows)[index]; i++) {
+				for (int j = 0; j < (*rows)[index]; j++) {
 					(*array)[index][i][j] = temp[i][j];
+				}
+			}
 
 			reset_matrix(&temp, (*rows)[index], (*rows)[index]);
 		}
@@ -308,8 +336,10 @@ void raise(int ****array, int layer, int **rows, int **columns)
 	for (int i = 0; i < (*rows)[index]; i++) {
 		for (int j = 0; j < (*rows)[index]; j++) {
 			(*array)[index][i][j] = raised[i][j];
-			if ((*array)[index][i][j] < 0)
+
+			if ((*array)[index][i][j] < 0) {
 				(*array)[index][i][j] += MODULO;
+			}
 		}
 	}
 
@@ -363,8 +393,9 @@ void quit(int ****array, int layer, int **rows, int **columns)
 	/**
 	 * Frees matrix by matrix from the array
 	 */
-	for (int num = 0; num < layer; num++)
+	for (int num = 0; num < layer; num++) {
 		free_matrix(&(*array)[num], (*rows)[num]);
+	}
 
 	if (layer) {
 		free((*array));

@@ -25,7 +25,7 @@ int main(void)
 			break;
 
 		case 67: // 'C'
-			correct(&array, layer, &rows, &columns);
+			crop(&array, layer, &rows, &columns);
 			break;
 
 		case 77: // 'M'

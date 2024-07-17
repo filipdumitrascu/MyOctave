@@ -21,26 +21,27 @@
 	} while (0)
 
 /**
- * @brief Allocates the memory of an array
+ * @brief Allocates the memory of an array and
+ * initializes the elements with 0.
  * 
- * @param array the array of matrices
- * @param num the size
+ * @param array the array
+ * @param num the number of elements
  */
 void alloc_array(int **array, int num);
 
 /**
  * @brief Reallocates the memory of an array
  * 
- * @param array the array of matrices
- * @param num the size
+ * @param array the array
+ * @param num the new number of elements
  */
 void realloc_array(int **array, int num);
 
 /**
  * @brief Allocates memory for an array of matrices
  * 
- * @param array teh array of matrices
- * @param num the size
+ * @param array the array of matrices
+ * @param num the number of matrices
  */
 void alloc_array_of_matrices(int ****array, int num);
 
@@ -48,7 +49,7 @@ void alloc_array_of_matrices(int ****array, int num);
  * @brief Reallocates memory for an array of matrices
  * 
  * @param array the array of matrices
- * @param num the size
+ * @param num the new number of
  */
 void realloc_array_of_matrices(int ****array, int num);
 
@@ -79,7 +80,7 @@ void free_matrix(int ***matrix, int rows);
 void reset_matrix(int ***matrix, int rows, int columns);
 
 /**
- * @brief Swaps the values between two variables
+ * @brief Swaps the values between two integers
  * 
  * @param a first value
  * @param b second value
